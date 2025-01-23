@@ -20,6 +20,50 @@
 +
 确保本地的MYSQL开启了native_password，参考[ERROR 1524 (HY000): Plugin ‘mysql_native_password‘ is not loaded](https://blog.csdn.net/xiaohua616/article/details/139477112).
 
+## 配置文件
+
+在桌面上新建一个文件，后缀为`.json`，名称尽量使用英文命名，如`config.json`,然后将此代码复制到文件中
+
+> host：主机
+>
+> port：端口
+>
+> user：mysql用户
+>
+>
+
+```json
+{
+  "host": "localhost",
+  "port": "3306",
+  "user": "root",
+  "password": "123456",
+  "database": "shop_data",
+  "connectTimeout": 5,
+  "varchar": 255,
+  "decimal": [
+    10,
+    4
+  ],
+  "custom_types": {
+    "阿里章吴记天猫旗舰店日报表": {
+      "店铺名称": "VARCHAR(50)",
+      "日期": "DATE",
+      "销售额": "DECIMAL(10,4)",
+      "浏览量": "DECIMAL(10,4)",
+      "访客": "DECIMAL(10,4)",
+      "转化率": "VARCHAR(50)",
+      "客单价": "DECIMAL(10,4)",
+      "老客销售额": "DECIMAL(10,4)",
+      "老客销售占比": "VARCHAR(50)",
+      "退款金额": "DECIMAL(10,4)",
+      "退款率": "VARCHAR(50)",
+      "推广费": "DECIMAL(10,4)"
+    }
+  }
+}
+```
+
 # 用法(Usage)
 
 安装nodejs最新版本`（>=v22.13.1）`,[NodeJS安装](https://nodejs.org/en).
@@ -65,8 +109,6 @@
 11. 你会发现在上一层多了一个日志文件
 
 ![](./assets/日志文件.jpg)
-
-## 1.配置文件
 
 # 常见的问题(Q/A)
 
