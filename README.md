@@ -21,8 +21,9 @@
 
 + 确保最后一行数据的数据类型，代表所有数据行的数据类型
 
-+
-确保你的MYSQL服务开启了native_password，参考[ERROR 1524 (HY000): Plugin ‘mysql_native_password‘ is not loaded](https://blog.csdn.net/xiaohua616/article/details/139477112).
++ 确保你的MYSQL服务开启了native_password，参考[ERROR 1524 (HY000): Plugin ‘mysql_native_password‘ is not loaded](https://blog.csdn.net/xiaohua616/article/details/139477112).
+
+
 
 由于excel和mysql之间的巨大鸿沟和性能原因，以上规则略微繁琐，但这是一劳永逸的工具，祝福你，往下看吧~
 
@@ -102,45 +103,45 @@
 
 1. 下载项目到本地
 
-![](docs/images/下载项目到本地.jpg)
+![](docs/images/1.jpg)
 
 2. 解压缩
 
-![](docs/images/解压缩.jpg)
+![](docs/images/8.jpg)
 
 3. 进入该目录
 
-![](docs/images/进入该目录.jpg)
+![](docs/images/9.jpg)
 
 4. `shift`+右键打开命令行（最好是管理员模式）
 
-![](docs/images/打开命令行.jpg)
+![](docs/images/4.jpg)
 
 5. 输入`node -v`，看下是否可以正常显示版本号，如果不行请上网自行搜索**`如何安装nodejs`**。
 
 6. 输入`npm i`，安装所需要的依赖，然后等待片刻
 
-![](docs/images/安装依赖.jpg)
+![](docs/images/3.jpg)
 
 7. 然后会发现多了node_modules目录
 
-![](docs/images/多了node_modules目录.jpg)
+![](docs/images/2.jpg)
 
 8. 运行程序，一共有两个参数 输入`npm start <配置文件地址> <excel或者excel目录的地址>`,然后回车
 
-![](docs/images/配置文件路径.jpg)
+![](docs/images/10.jpg)
 
 9. 出现这个报错，表示你没有关闭其中的某些excel文件，建议关闭所有excel窗口
 
-![](docs/images/文件窗口报错.jpg)
+![](docs/images/6.jpg)
 
 10. 继续执行，出现这个表示执行成功，然后返回到程序的文件夹
 
-![](docs/images/执行成功.jpg)
+![](docs/images/5.jpg)
 
 11. 你会发现在上一层多了一个日志文件
 
-![](docs/images/日志文件.jpg)
+![](docs/images/7.jpg)
 
 # 常见的问题(Q/A)
 
