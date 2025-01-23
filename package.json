@@ -1,0 +1,19 @@
+{
+  "name": "excel2mysql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/mysql": "^2.15.26",
+    "exceljs": "^4.4.0",
+    "mysql": "^2.18.1",
+    "node-mysql": "^0.4.2"
+  }
+}
