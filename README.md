@@ -102,45 +102,45 @@
 
 1. 下载项目到本地
 
-![](docs/下载项目到本地.jpg)
+![](docs/images/下载项目到本地.jpg)
 
 2. 解压缩
 
-![](docs/解压缩.jpg)
+![](docs/images/解压缩.jpg)
 
 3. 进入该目录
 
-![](docs/进入该目录.jpg)
+![](docs/images/进入该目录.jpg)
 
 4. `shift`+右键打开命令行（最好是管理员模式）
 
-![](docs/打开命令行.jpg)
+![](docs/images/打开命令行.jpg)
 
 5. 输入`node -v`，看下是否可以正常显示版本号，如果不行请上网自行搜索**`如何安装nodejs`**。
 
 6. 输入`npm i`，安装所需要的依赖，然后等待片刻
 
-![](docs/安装依赖.jpg)
+![](docs/images/安装依赖.jpg)
 
 7. 然后会发现多了node_modules目录
 
-![](docs/多了node_modules目录.jpg)
+![](docs/images/多了node_modules目录.jpg)
 
 8. 运行程序，一共有两个参数 输入`npm start <配置文件地址> <excel或者excel目录的地址>`,然后回车
 
-![](docs/配置文件路径.jpg)
+![](docs/images/配置文件路径.jpg)
 
 9. 出现这个报错，表示你没有关闭其中的某些excel文件，建议关闭所有excel窗口
 
-![](docs/文件窗口报错.jpg)
+![](docs/images/文件窗口报错.jpg)
 
 10. 继续执行，出现这个表示执行成功，然后返回到程序的文件夹
 
-![](docs/执行成功.jpg)
+![](docs/images/执行成功.jpg)
 
 11. 你会发现在上一层多了一个日志文件
 
-![](docs/日志文件.jpg)
+![](docs/images/日志文件.jpg)
 
 # 常见的问题(Q/A)
 
