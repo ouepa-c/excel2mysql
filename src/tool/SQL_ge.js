@@ -14,12 +14,7 @@ function sql_create_table(tb_name, {titleLine, dataType}) {
     return `
         CREATE TABLE IF NOT EXISTS ${tb_name}
         (
-            _id
-            INT
-            UNSIGNED
-            AUTO_INCREMENT
-            PRIMARY
-            KEY,
+            _id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             ${fields}
         );
     `
@@ -29,7 +24,7 @@ function sql_create_table(tb_name, {titleLine, dataType}) {
  * @param tb_name 表名
  * @param title_dataLine 标题和数据
  * */
-function sql_insert_table(tb_name, {titleLine, dataLine}) {
+function sql_insert_table(tb_name, {titleLine}) {
     return `INSERT INTO ${tb_name} (${titleLine.join(',')})
             VALUES (${'?,'.repeat(titleLine.length - 1) + '?'});`
 }

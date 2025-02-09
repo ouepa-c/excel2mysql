@@ -96,6 +96,7 @@ function SQL_CREATE_TABLE(ExcelWBKVMap) {
 }
 
 function SQL_DATA_INSERT(ExcelWBKVMap) {
+    // todo BUG:表重复添加数据
     const {promise, resolve} = Promise.withResolvers()
     Array.of(...ExcelWBKVMap.keys()).forEach(sheetName => {
         const sheetOptions = ExcelWBKVMap.get(sheetName)
@@ -103,20 +104,20 @@ function SQL_DATA_INSERT(ExcelWBKVMap) {
             new Log().SUCCESS(`正在上载数据至{{${sheetName}}}`)
             let i = 0
             const {titleLine, dataLine, dataType} = sheetOptions
-            f: for (let i = 0; i < dataLine.length; i++) {
+            for (let i = 0; i < dataLine.length; i++) {
                 const d = dataLine[i]
-                const insert_str = sql_insert_table(sheetName, {titleLine, dataLine})
+                const insert_str = sql_insert_table(sheetName, {titleLine})
                 if (d.length === sheetOptions.titleLine.length) {
                     MYSQL_client.query(insert_str, d, (err) => {
                         if (err) {
                             new Log().ERROR(`{{${sheetName}}}在上载数据时出错，第${i + 1}行:[${d}],[${err}]`)
                         } else {
+                            // todo 数据库查询是异步的 计数失效
                             i++
                         }
                     })
                 } else {
                     new Log().WARNING(`{{${sheetName}}}在上载数据时出错，第${i + 1}行长度错误:[${d}]`)
-                    continue f
                 }
             }
             new Log().SUCCESS(`{{${sheetName}}}共${sheetOptions.dataLine.length}行数据,成功写入${i}行.`)
@@ -164,6 +165,7 @@ function possibleDataTypes(sheetName, ExcelWBKVMap) {
     }
     // default
     else {
+        // todo 完善当数据为空或数据长度不足时的类型匹配
         new Log().SUCCESS(`未获取到{{${sheetName}}}【自定义】数据类型,将根据字段分配数据类型,请确保最新的数据行没有空值`)
         if (sheet.dataLine[sheet.dataLine.length - 1].length !== sheet.titleLine.length) {
             new Log().ERROR(`工作表{{${sheetName}}}最新数据行长度和标题行长度不一，请弥补数据行，该表跳过【skip】`)
