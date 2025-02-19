@@ -25,6 +25,7 @@ function handleExcelFiles(mysqlClient) {
     new Log().SUCCESS(`excel文件路径获取成功 (${excelFilePath})`)
     new Log().split()
     func(excelFilePath)
+    new Log().end()
 }
 
 function isFile(excelFilePath) {
@@ -32,7 +33,7 @@ function isFile(excelFilePath) {
     if (!path.extname(excelFilePath) === '.xlsx') {
         const msg = `<${excelFilePath}> is not a valid excel(xlsx) file`
         new Log().ERROR(msg)
-        throw new Error()
+        throw new Error(msg)
     }
     handleExcelWB(excelFilePath)
 }
@@ -67,8 +68,9 @@ async function handleExcelWB(ePath) {
         ExcelWorkBookKVMap.set(ws.name, {sheetId, ...sheetObject})
     })
     Array.of(...ExcelWorkBookKVMap.keys()).forEach(sheet_name => possibleDataTypes(sheet_name, ExcelWorkBookKVMap))
-    new Log().SUCCESS(`数据类型加载完毕 将进行SQL转换`)
+    new Log().SUCCESS(`所有表格数据类型加载完毕 将进行建表`)
     await SQL_CREATE_TABLE(ExcelWorkBookKVMap)
+    new Log().SUCCESS(`建表步骤完成 将进行数据插入`)
     await SQL_DATA_INSERT(ExcelWorkBookKVMap)
     new Log().split()
 }
@@ -96,13 +98,12 @@ function SQL_CREATE_TABLE(ExcelWBKVMap) {
 }
 
 function SQL_DATA_INSERT(ExcelWBKVMap) {
-    // todo BUG:表重复添加数据
     const {promise, resolve} = Promise.withResolvers()
-    Array.of(...ExcelWBKVMap.keys()).forEach(sheetName => {
+    const ExcelTableKeys = Array.of(...ExcelWBKVMap.keys())
+    ExcelTableKeys.forEach((sheetName, sIdx) => {
         const sheetOptions = ExcelWBKVMap.get(sheetName)
         if (!sheetOptions.skip) {
             new Log().SUCCESS(`正在上载数据至{{${sheetName}}}`)
-            let i = 0
             const {titleLine, dataLine, dataType} = sheetOptions
             for (let i = 0; i < dataLine.length; i++) {
                 const d = dataLine[i]
@@ -110,21 +111,17 @@ function SQL_DATA_INSERT(ExcelWBKVMap) {
                 if (d.length === sheetOptions.titleLine.length) {
                     MYSQL_client.query(insert_str, d, (err) => {
                         if (err) {
-                            new Log().ERROR(`{{${sheetName}}}在上载数据时出错，第${i + 1}行:[${d}],[${err}]`)
-                        } else {
-                            // todo 数据库查询是异步的 计数失效
-                            i++
+                            new Log().ERROR(`{{${sheetName}}}在上载数据时出错，第${i + 2}行:[${d}],[${err}]`)
                         }
                     })
                 } else {
-                    new Log().WARNING(`{{${sheetName}}}在上载数据时出错，第${i + 1}行长度错误:[${d}]`)
+                    new Log().WARNING(`{{${sheetName}}}在上载数据时出错，第${i + 2}行长度错误:[${d}]`)
                 }
             }
-            new Log().SUCCESS(`{{${sheetName}}}共${sheetOptions.dataLine.length}行数据,成功写入${i}行.`)
-            new Log().split()
+            new Log().SUCCESS(`{{${sheetName}}}数据循环完毕${(sIdx === ExcelTableKeys.length - 1) ? '' : `,将循环{{${ExcelTableKeys[sIdx + 1]}}`}`)
         }
     })
-    resolve()
+    resolve(true)
     return promise
 }
 

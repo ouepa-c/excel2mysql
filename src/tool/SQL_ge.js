@@ -8,7 +8,7 @@ const os = require("node:os")
 function sql_create_table(tb_name, {titleLine, dataType}) {
     let fields = ''
     titleLine.forEach((t, i) => {
-        fields += `${t}\t${dataType[i]}${i === titleLine.length - 1 ? os.EOL : ','}`
+        fields += `${t}\t${dataType[i]}${i === titleLine.length - 1 ? '\n' : ','}`
     })
 
     return `
