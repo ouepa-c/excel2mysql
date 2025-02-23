@@ -1,5 +1,5 @@
 const mysql = require("mysql")
-const {Log} = require("./tool/log");
+const {Log} = require("./tool/log")
 
 function link2Mysql(db_config) {
     const {promise, resolve} = Promise.withResolvers()

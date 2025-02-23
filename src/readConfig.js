@@ -1,11 +1,11 @@
-const fs = require("node:fs");
+const fs = require("node:fs")
 const {
     DefaultDataBaseConfigurationFileName,
     DefaultDataBaseConfiguration,
     CUSTOM_DATATYPES
 } = require("../config/constant")
 const path = require("node:path")
-const {Log} = require("./tool/log");
+const {Log} = require("./tool/log")
 let db_config = {}
 
 /**

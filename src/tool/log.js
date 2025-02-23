@@ -44,10 +44,6 @@ class _Log {
         this.write('----------------------------------------'.repeat(5) + '>' + os.EOL)
     }
 
-    end() {
-        fs.closeSync(this.current_file)
-    }
-
     getTimestamp(isFile = false) {
         const now = new Date()
         const year = now.getFullYear()
