@@ -1,6 +1,5 @@
 const {DefaultLoggingDir} = require("../../config/constant")
 const path = require("node:path")
-const inspector = require("node:inspector")
 const fs = require("node:fs")
 const os = require("node:os")
 let log_instance
@@ -11,7 +10,7 @@ class _Log {
     current_file
 
     constructor() {
-        this.log_dir = path.resolve(process.cwd(), DefaultLoggingDir)
+        this.log_dir = path.resolve(path.join(os.homedir(), 'Desktop'), DefaultLoggingDir)
         // make sure
         if (!fs.existsSync(this.log_dir)) {
             fs.mkdirSync(this.log_dir, {recursive: true})

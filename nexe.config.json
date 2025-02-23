@@ -1,0 +1,7 @@
+{
+  "input": "index.js",
+  "output": "./excel2mysql.exe",
+  "resources": [],
+  "ico": "./public/favicon.ico",
+  "target": "windows-x64-22.13.1"
+}

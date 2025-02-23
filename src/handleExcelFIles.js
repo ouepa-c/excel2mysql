@@ -7,7 +7,6 @@ const {isDateString} = require("./tool/isDateString")
 const {DATE, VARCHAR, DECIMAL, sql_create_table, sql_insert_table} = require("./tool/SQL_ge")
 const {Log} = require("./tool/log")
 const os = require("node:os")
-const {raw} = require("mysql")
 const [_a1, _a2, ...args] = process.argv
 
 /**
@@ -42,7 +41,7 @@ function isDirectory(excelFilePath) {
         encoding: "utf8", recursive: false, withFileTypes: true
     })
       .filter(d => path.extname(d.name) === '.xlsx')
-      .forEach(d => handleExcelWB(path.join(d.parentPath, d.name)))
+      .forEach(d => handleExcelWB(path.join(excelFilePath, d.name)))
 }
 
 async function handleExcelWB(ePath) {
@@ -127,49 +126,49 @@ function possibleDataTypes(sheetName, ExcelWBKVMap, custom_types) {
 }
 
 function SQL_CREATE_TABLE(ExcelWBKVMap) {
-    const {promise, resolve} = Promise.withResolvers()
-    Array.of(...ExcelWBKVMap.keys()).forEach(sheetName => {
-        const sheetOptions = ExcelWBKVMap.get(sheetName)
-        if (!sheetOptions.skip) {
-            const {titleLine, dataType} = sheetOptions
-            const s_create_table = sql_create_table(sheetName, {titleLine, dataType})
-            new Log().SUCCESS(`{{${sheetName}}}建表SQL:${os.EOL}${s_create_table}`)
-            MYSQL_client.query(s_create_table, (err, result) => {
-                if (err) {
-                    new Log().ERROR(`{{${sheetName}}}建表失败: [${err}]`)
-                    sheetOptions.skip = true
-                }
-            })
-        }
-    })
-    resolve()
-    return promise
-}
-
-function SQL_DATA_INSERT(ExcelWBKVMap) {
-    const {promise, resolve} = Promise.withResolvers()
-    const ExcelTableKeys = Array.of(...ExcelWBKVMap.keys())
-    ExcelTableKeys.forEach((sheetName, sIdx) => {
-        const sheetOptions = ExcelWBKVMap.get(sheetName)
-        if (!sheetOptions.skip) {
-            new Log().SUCCESS(`正在上载数据至{{${sheetName}}}`)
-            const {titleLine, dataLine, dataType} = sheetOptions
-            // 遍历数据行
-            f:for (let i = 0; i < dataLine.length; i++) {
-                const d = dataLine[i]
-                const insert_str = sql_insert_table(sheetName, titleLine, d)
-                MYSQL_client.query(insert_str, d.filter(t => !!t), (err) => {
+    return new Promise((resolve, reject) => {
+        Array.of(...ExcelWBKVMap.keys()).forEach(sheetName => {
+            const sheetOptions = ExcelWBKVMap.get(sheetName)
+            if (!sheetOptions.skip) {
+                const {titleLine, dataType} = sheetOptions
+                const s_create_table = sql_create_table(sheetName, {titleLine, dataType})
+                new Log().SUCCESS(`{{${sheetName}}}建表SQL:${os.EOL}${s_create_table}`)
+                MYSQL_client.query(s_create_table, (err, result) => {
                     if (err) {
-                        new Log().ERROR(`{{${sheetName}}}在上载数据时出错，第${i + 2}行:[${dataLine[i]}],[${insert_str}],[${err}]`)
+                        new Log().ERROR(`{{${sheetName}}}建表失败: [${err}]`)
+                        sheetOptions.skip = true
                     }
                 })
             }
-            new Log().SUCCESS(`{{${sheetName}}}数据循环完毕${(sIdx === ExcelTableKeys.length - 1) ? '' : `,将循环{{${ExcelTableKeys[sIdx + 1]}}`}`)
-            ExcelWBKVMap.get(sheetName).skip = true
-        }
+        })
+        resolve()
     })
-    resolve(true)
-    return promise
+}
+
+function SQL_DATA_INSERT(ExcelWBKVMap) {
+    return new Promise((resolve, reject) => {
+        const ExcelTableKeys = Array.of(...ExcelWBKVMap.keys())
+        ExcelTableKeys.forEach((sheetName, sIdx) => {
+            const sheetOptions = ExcelWBKVMap.get(sheetName)
+            if (!sheetOptions.skip) {
+                new Log().SUCCESS(`正在上载数据至{{${sheetName}}}`)
+                const {titleLine, dataLine, dataType} = sheetOptions
+                // 遍历数据行
+                f:for (let i = 0; i < dataLine.length; i++) {
+                    const d = dataLine[i]
+                    const insert_str = sql_insert_table(sheetName, titleLine, d)
+                    MYSQL_client.query(insert_str, d.filter(t => !!t), (err) => {
+                        if (err) {
+                            new Log().ERROR(`{{${sheetName}}}在上载数据时出错，第${i + 2}行:[${dataLine[i]}],[${insert_str}],[${err}]`)
+                        }
+                    })
+                }
+                new Log().SUCCESS(`{{${sheetName}}}数据循环完毕${(sIdx === ExcelTableKeys.length - 1) ? '' : `,将循环{{${ExcelTableKeys[sIdx + 1]}}`}`)
+                ExcelWBKVMap.get(sheetName).skip = true
+            }
+        })
+        resolve()
+    })
 }
 
 module.exports = {

@@ -2,9 +2,11 @@
   "name": "excel2mysql",
   "version": "1.0.0",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./index.js"
+    "start": "node ./index.js",
+    "build": "pkg . --out-path dist/"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +17,11 @@
     "exceljs": "^4.4.0",
     "mysql": "^2.18.1",
     "node-mysql": "^0.4.2"
+  },
+  "pkg": {
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "./dist"
   }
 }
