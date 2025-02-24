@@ -13,22 +13,24 @@ let db_config = {}
  * @param isDefaultDBConfig 是否获取默认的配置文件地址
  * */
 function readConfig(isDefaultDBConfig, args) {
-    let c = ""
-    let p = path.resolve(process.cwd(), isDefaultDBConfig ? DefaultDataBaseConfigurationFileName : args[0])
-    try {
-        // 读取默认配置
-        c = fs.readFileSync(p, {encoding: 'utf8'})
-        if (!c) {
-            // 文件无内容
-            const msg = `[Wrong Content]${p} has no content`
-            throw new Error(msg)
+    return new Promise((resolve, reject) => {
+        try {
+            let c = ""
+            let p = path.resolve(process.cwd(), isDefaultDBConfig ? DefaultDataBaseConfigurationFileName : args[0])
+            // 读取默认配置
+            c = fs.readFileSync(p, {encoding: 'utf8'})
+            if (!c) {
+                // 文件无内容
+                const msg = `[Wrong Content]${p} has no content`
+                throw new Error(msg)
+            }
+            db_config = configurationResolver(JSON.parse(c))
+            new Log().SUCCESS(`配置文件读取成功 (config_path:${p})`)
+            resolve(db_config)
+        } catch (err) {
+            new Log().ERROR(err)
         }
-        db_config = configurationResolver(JSON.parse(c))
-        new Log().SUCCESS(`配置文件读取成功 (config_path:${p})`)
-        return db_config
-    } catch (err) {
-        new Log().ERROR(err)
-    }
+    })
 }
 
 /**

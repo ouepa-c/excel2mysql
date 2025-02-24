@@ -7,7 +7,6 @@ const {isDateString} = require("./tool/isDateString")
 const {DATE, VARCHAR, DECIMAL, sql_create_table, sql_insert_table} = require("./tool/SQL_ge")
 const {Log} = require("./tool/log")
 const os = require("node:os")
-const [_a1, _a2, ...args] = process.argv
 
 /**
  * @remarks Map<sheetName => {sheetId,titleLine:[],dataLine:[],dataType:[],skip:boolean}>
@@ -16,7 +15,7 @@ const ExcelWorkBookKVMap = new Map()
 let excelFileStat
 let MYSQL_client
 
-function handleExcelFiles(mysqlClient) {
+function handleExcelFiles(mysqlClient, args) {
     const excelFilePath = args[args.length === 1 ? 0 : 1]
     excelFileStat = fs.statSync(excelFilePath)
     MYSQL_client = mysqlClient
